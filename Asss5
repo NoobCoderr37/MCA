@@ -1,0 +1,218 @@
+Assignment-5
+Q1.
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class First
+ */
+@WebServlet("/First")
+public class First extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public First() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		PrintWriter pw = response.getWriter();
+		pw.println("<h1>Welcome</h1>");
+		pw.println("<h3>IP Address: " + request.getRemoteAddr() + "</h3>");
+		pw.println("<h3>Browser Type: " + request.getHeader("user-agent") + "</h1>");
+		pw.println("<h3>Host Name: " + request.getHeader("host") + "</h3>");
+
+		final String userAgent = request.getHeader("User-Agent");
+		String OSType;
+
+		if (userAgent == null || userAgent.isEmpty()) {
+			OSType = "UNKNOWN";
+
+		} else if (userAgent.toLowerCase().contains("windows")) {
+			OSType = "WINDOWS";
+
+		}else if(userAgent.toLowerCase().contains("mac")) {
+			OSType = "MAC";
+		}else if(userAgent.toLowerCase().contains("x11")) {
+			OSType = "LINUX";
+		}else if(userAgent.toLowerCase().contains("android")) {
+			OSType = "ANDROID";
+		}else if(userAgent.toLowerCase().contains("iphone")) {
+			OSType = "IPHONE";
+		}else {
+			OSType ="UNKNOWN";
+		}
+		pw.println("<h3>OS NAME:"+OSType+"</h3>");
+
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
+
+
+Q2.
+Html.
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<center>
+<form action="Login"method="get">
+  <div class="form-group">
+    <label for="exampleInputEmail1">username</label>
+    <input type="text" class="form-control" name="name" >
+    
+  </div><br>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Password</label>
+    <input type="password" class="form-control" name="pass" >
+  </div><br>
+ 
+  <button type="submit" class="btn btn-primary">Login</button>
+</form>
+</center>
+</body>
+</html>
+Servlet
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class Login
+ */
+@WebServlet("/Login")
+public class Login extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public Login() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		PrintWriter pw = response.getWriter();
+		String name = request.getParameter("name");
+		String pass = request.getParameter("pass");
+		
+		if(name.equals("yash") && pass.equals("yash123"))
+			pw.println("<h1>Successfull Logged in</h1>");
+		else
+			pw.println("<h1> Incorrect user name or password</h1>");
+		pw.close();
+		
+		
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
+Set B Q1.
+Jsp .
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<%@ page import="java.sql.*"%>
+<%@ page import="java.io.*"%>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Display Company Details</title>
+</head>
+<body>
+	<h1>Company Details</h1>
+
+	<table = border="1">
+		<tr>
+			<th>Name</th>
+			<th>Location</th>
+			<th>Address</th>
+			<th>Email</th>
+			<th>Phone No</th>
+		</tr>
+
+		<%
+		try{
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Demo","root","root@123");
+			String query = "Select * from Company";
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery(query);
+			
+			while(rs.next()){	%>
+		<tr>
+			<td><%= rs.getString(1) %></td>
+			<td><%= rs.getString(2) %></td>
+			<td><%= rs.getString(3) %></td>
+			<td><%= rs.getString(4) %></td>
+			<td><%= rs.getString(5) %></td>
+		</tr>
+		<% 
+		}%>
+		</table>
+		<%
+		conn.close();
+		
+	}catch(ClassNotFoundException e){
+		out.println("driver not loaded <br>");
+		e.printStackTrace();
+	}
+		catch(SQLException e){
+			out.println("Sql exception:");
+			e.printStackTrace();
+		}
+		catch(Exception e){
+			%>
+			<h1>Driver Not Loaded</h1>
+			<%
+		}
+		 %>
+
+</body>
+</html>
